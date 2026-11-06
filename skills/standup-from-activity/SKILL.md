@@ -4,7 +4,7 @@ description: "Write a standup update (yesterday / today / blockers) from the use
 license: MIT
 metadata:
   author: codertushar
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Standup from activity
@@ -16,8 +16,11 @@ The update must only contain things that actually happened. If the activity is t
 1. **Work out the window.** Default to the previous working day (Friday when today is Monday). Use the user's local timezone; ask if unknown.
 
 2. **Collect activity** for the user only, within the window:
-   - Commits: `git log --author="<user>" --since=<start> --until=<end> --all --no-merges --format='%h %ad %s' --date=local` in each repo the user names (default: the current repo).
-   - Pull requests: if the `gh` CLI is available, `gh search prs --author=@me --updated=">=<start-date>"` and `gh search prs --reviewed-by=@me --updated=">=<start-date>"`.
+   - **Identity first.** Get the user's email with `git config user.email`. People often commit under more than one email (work, personal, GitHub no-reply), so run `git shortlog -sne --all | head -20`, and if other entries look like the same person, ask which are theirs. Pass one `--author=<email>` per email.
+   - Commits: `git log --author=<email> --since=<start> --until=<end> --all --no-merges --format='%h %ad %s' --date=local` in each repo the user names (default: the current repo).
+   - Pull requests authored: if the `gh` CLI is available, `gh search prs --author=@me --updated=">=<start-date>"`. This also returns PRs that only *other people* touched in the window (a teammate's comment, a bot). Keep a PR only if the user committed, commented or merged in the window (`gh pr view <number> --repo <owner/repo> --json commits,comments,mergedAt`).
+   - Reviews given: `gh search prs --reviewed-by=@me --updated=">=<start-date>"`, then keep only PRs where the user's own review is dated inside the window (`gh pr view <number> --repo <owner/repo> --json reviews`).
+   - Tickets: if a Jira, Linear or GitHub Issues tool is connected, include tickets the user moved or commented on in the window.
    - Anything the user pastes (meetings, notes, tickets).
 
 3. **Group by outcome, not by commit.** Five commits on one feature become one line about that feature. Use the PR title or ticket as the anchor.
