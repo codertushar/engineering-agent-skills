@@ -11,6 +11,8 @@ They use the open [Agent Skills](https://agentskills.io) `SKILL.md` format, so t
 | [`bugfix-test-first`](skills/bugfix-test-first/SKILL.md) | Reproduces the bug in a failing test, proves it fails, then makes the smallest fix. Never weakens an existing test. | You report a bug, paste a stack trace, or say "fix this" |
 | [`standup-from-activity`](skills/standup-from-activity/SKILL.md) | Builds a yesterday / today / blockers update from your real git and PR activity. Never invents work. | You say "standup" or "what did I do yesterday" |
 
+See [`examples/split-bill`](examples/split-bill) for a real run of `bugfix-test-first` on a small project.
+
 More coming. Follow the repo to get notified.
 
 ## Install
